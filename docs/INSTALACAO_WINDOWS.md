@@ -21,7 +21,7 @@ O Kairós PDV é fornecido em duas versões executáveis:
 1. **Instalador Oficial (`KairosPDV-Setup-1.0.0.exe`):**
    - Cria atalhos na Área de Trabalho e no Menu Iniciar do Windows.
    - Instalação no perfil do usuário (`%LOCALAPPDATA%\Programs\KairosPDV`), não exigindo permissões de administrador.
-   - Os dados de vendas ficam gravados localmente no computador, em `%APPDATA%\KairosPDV\Local Storage\` (armazenamento local do navegador embarcado). Atualizações do programa **nunca** apagam ou substituem esses dados — e o botão **Backup** permite salvá-los em arquivo `.kpdv`.
+   - Os dados de vendas ficam gravados localmente no computador, em `%APPDATA%\Kairós PDV\Local Storage\` (armazenamento local do navegador embarcado). Atualizações do programa **nunca** apagam ou substituem esses dados — e o botão **Backup** permite salvá-los em arquivo `.kpdv`.
 
 2. **Versão Portátil (`KairosPDV-1.0.0-Portable.exe`):**
    - Não requer instalação.
