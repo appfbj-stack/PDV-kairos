@@ -1,0 +1,35 @@
+{
+  "appId": "com.kairospdv.app",
+  "productName": "Kairós PDV",
+  "executableName": "KairosPDV",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "package.json"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "ia32"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "requestedExecutionLevel": "asInvoker"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Kairós PDV",
+    "uninstallDisplayName": "Kairós PDV - Ponto de Venda",
+    "deleteAppDataOnUninstall": false
+  }
+}

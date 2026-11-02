@@ -1,0 +1,6 @@
+{
+  "name": "Kairós PDV - Ponto de Venda",
+  "description": "Sistema de ponto de venda simples, rápido e offline para Windows. Controle de estoque, leitor de código de barras, fechamento de caixa e comprovantes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
