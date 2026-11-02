@@ -21,7 +21,7 @@ O Kairós PDV é fornecido em duas versões executáveis:
 1. **Instalador Oficial (`KairosPDV-Setup-1.0.0.exe`):**
    - Cria atalhos na Área de Trabalho e no Menu Iniciar do Windows.
    - Instalação no perfil do usuário (`%LOCALAPPDATA%\Programs\KairosPDV`), não exigindo permissões de administrador.
-   - O banco de dados SQLite é mantido em `%APPDATA%\KairosPDV\kairos_pdv.sqlite`. Atualizações do programa **nunca** apagam ou substituem seu banco de dados de vendas.
+   - Os dados de vendas ficam gravados localmente no computador, em `%APPDATA%\KairosPDV\Local Storage\` (armazenamento local do navegador embarcado). Atualizações do programa **nunca** apagam ou substituem esses dados — e o botão **Backup** permite salvá-los em arquivo `.kpdv`.
 
 2. **Versão Portátil (`KairosPDV-1.0.0-Portable.exe`):**
    - Não requer instalação.
@@ -42,7 +42,7 @@ O Kairós PDV é fornecido em duas versões executáveis:
 
 ## 4. Primeiro Uso e Configuração Inicial
 
-1. Ao abrir pela primeira vez, o Kairós PDV criará automaticamente seu banco SQLite local com produtos essenciais de demonstração.
+1. Ao abrir pela primeira vez, o Kairós PDV prepara o armazenamento local e já carrega produtos essenciais de demonstração.
 2. Acesse a aba **Configurações**:
    - Digite o **Nome Fantasia** da sua loja.
    - Insira o **CNPJ** (opcional) e endereço para constar no topo dos comprovantes.

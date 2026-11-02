@@ -22,7 +22,7 @@ function createWindow() {
     backgroundColor: '#0f172a',
     autoHideMenuBar: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
@@ -59,6 +59,9 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+// IPC: Versão do aplicativo
+ipcMain.handle('app:version', () => app.getVersion());
 
 // IPC: Diálogo para seleção de pasta de backup no Windows
 ipcMain.handle('dialog:selectDirectory', async () => {

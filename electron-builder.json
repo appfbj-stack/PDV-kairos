@@ -7,14 +7,15 @@
   },
   "files": [
     "dist/**/*",
-    "electron/**/*",
+    "electron/main.cjs",
+    "electron/preload.cjs",
     "package.json"
   ],
   "win": {
     "target": [
       {
         "target": "nsis",
-        "arch": ["x64", "ia32"]
+        "arch": ["x64"]
       },
       {
         "target": "portable",
@@ -24,6 +25,7 @@
     "requestedExecutionLevel": "asInvoker"
   },
   "nsis": {
+    "artifactName": "KairosPDV-Setup-${version}.${ext}",
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
     "createDesktopShortcut": true,
@@ -31,5 +33,15 @@
     "shortcutName": "Kairós PDV",
     "uninstallDisplayName": "Kairós PDV - Ponto de Venda",
     "deleteAppDataOnUninstall": false
-  }
+  },
+  "portable": {
+    "artifactName": "KairosPDV-${version}-Portable.${ext}"
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "appfbj-stack",
+      "repo": "PDV-kairos"
+    }
+  ]
 }

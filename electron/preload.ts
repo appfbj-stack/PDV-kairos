@@ -14,9 +14,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   printReceipt: (options?: { silent?: boolean; printerName?: string }) =>
     ipcRenderer.invoke('print:receipt', options),
   selectDirectory: () => ipcRenderer.invoke('dialog:selectDirectory'),
-  dbQuery: (sql: string, params: unknown[]) => ipcRenderer.invoke('db:query', sql, params),
-  dbTransaction: (queries: { sql: string; params: unknown[] }[]) =>
-    ipcRenderer.invoke('db:transaction', queries),
   createBackupFile: (data: string) => ipcRenderer.invoke('backup:create', data),
   restoreBackupFile: () => ipcRenderer.invoke('backup:restore'),
 });
