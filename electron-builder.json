@@ -7,11 +7,15 @@
   },
   "files": [
     "dist/**/*",
+    "!dist/sw.js",
+    "!dist/manifest.webmanifest",
+    "!dist/icons/**",
     "electron/main.cjs",
     "electron/preload.cjs",
     "package.json"
   ],
   "win": {
+    "icon": "build/icon.ico",
     "target": [
       {
         "target": "nsis",
