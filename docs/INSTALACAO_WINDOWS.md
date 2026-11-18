@@ -16,7 +16,9 @@
 
 ## 2. Tipos de Instaladores Disponíveis
 
-O Kairós PDV é fornecido em duas versões executáveis:
+O Kairós PDV pode ser usado de **duas formas**:
+
+**A) Instalado no Windows (offline, recommended para o balcão)** — duas versões executáveis:
 
 1. **Instalador Oficial (`KairosPDV-Setup-1.0.0.exe`):**
    - Cria atalhos na Área de Trabalho e no Menu Iniciar do Windows.
@@ -26,6 +28,14 @@ O Kairós PDV é fornecido em duas versões executáveis:
 2. **Versão Portátil (`KairosPDV-1.0.0-Portable.exe`):**
    - Não requer instalação.
    - Pode ser executada diretamente de um pendrive em qualquer computador com Windows.
+
+**B) Como aplicativo web (PWA) — sem instalar nada:**
+
+- **Link:** https://appfbj-stack.github.io/PDV-kairos/
+- Abra o link no Chrome ou Edge (computador ou celular) e use o menu do navegador para **"Instalar aplicativo"**. O Kairós PDV passa a ter ícone próprio na área de trabalho / tela inicial e abre em janela própria.
+- Funciona **offline** depois da primeira visita (o app fica em cache no aparelho).
+- ⚠️ **Os dados da PWA ficam no `localStorage` do navegador** e são **separados** da versão instalada no Windows. Para levar os dados de uma versão para a outra, use **Backup** (arquivo `.kpdv`) e restaure no destino.
+- A PWA é a forma mais rápida de testar o sistema antes de instalar no PC do balcão.
 
 ---
 
