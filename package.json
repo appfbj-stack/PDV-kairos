@@ -15,7 +15,8 @@
     "clean": "node scripts/clean.mjs",
     "lint": "tsc --noEmit",
     "electron:dev": "npm run build:electron && electron .",
-    "dist:win": "npm run build && npm run build:electron && electron-builder --win --x64"
+    "dist:win": "npm run build && npm run build:electron && electron-builder --win --x64",
+    "publicar:pwa": "node scripts/publicar-pwa.mjs"
   },
   "//": "O app e 100% offline: o front vira bundle em dist/ e o processo principal do Electron so usa node + electron. Nada de 'dependencies' de runtime e necessario — por isso tudo fica em devDependencies e o instalador nao embarca node_modules.",
   "devDependencies": {

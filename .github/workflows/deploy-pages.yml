@@ -1,9 +1,21 @@
 name: Deploy PWA no GitHub Pages
 
+# Dispara manualmente (Actions) ou por push.
+# ATENCAO: enquanto o Actions da conta estiver bloqueado, este workflow falha
+# em segundos sem rodar nenhum passo. A publicacao atual e feita pelo branch
+# gh-pages (scripts/publicar-pwa.mjs), que nao depende de CI.
 on:
+  workflow_dispatch:
   push:
     branches: [main]
-  workflow_dispatch:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'package.json'
+      - 'bun.lock'
+      - '.github/workflows/deploy-pages.yml'
 
 permissions:
   contents: read
