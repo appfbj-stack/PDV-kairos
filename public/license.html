@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kairós PDV - Ativar licença</title>
+    <style>
+      :root {
+        --azul: #2563eb;
+        --azul-escuro: #1d4ed8;
+        --slate-900: #0f172a;
+        --slate-800: #1e293b;
+        --slate-700: #334155;
+        --slate-300: #cbd5e1;
+        --slate-400: #94a3b8;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        height: 100%;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: var(--slate-900);
+        color: #e2e8f0;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .cartao {
+        width: 100%;
+        max-width: 560px;
+        background: var(--slate-800);
+        border: 1px solid var(--slate-700);
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      }
+      .marca {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .logo {
+        width: 74px;
+        height: 74px;
+        border-radius: 16px;
+        flex: 0 0 auto;
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+      }
+      h1 { font-size: 20px; margin: 0 0 2px; letter-spacing: -0.01em; }
+      h1 span { color: var(--slate-400); font-weight: 400; }
+      .sub { font-size: 13px; color: var(--slate-400); margin: 0; }
+      label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--slate-300);
+        margin-bottom: 8px;
+      }
+      input {
+        width: 100%;
+        padding: 13px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--slate-700);
+        background: var(--slate-900);
+        color: #f1f5f9;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        outline: none;
+      }
+      input:focus {
+        border-color: var(--azul);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+      }
+      button {
+        width: 100%;
+        margin-top: 16px;
+        padding: 14px;
+        border: 0;
+        border-radius: 10px;
+        background: var(--azul);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover { background: var(--azul-escuro); }
+      button:disabled { opacity: 0.6; cursor: default; }
+      .equip {
+        margin-top: 22px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        background: var(--slate-900);
+        border: 1px dashed var(--slate-700);
+        font-size: 12.5px;
+        color: var(--slate-400);
+      }
+      .equip b {
+        display: block;
+        color: #f1f5f9;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 16px;
+        letter-spacing: 0.1em;
+        margin-top: 4px;
+      }
+      .aviso {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        display: none;
+      }
+      .aviso.erro { display: block; background: rgba(220, 38, 38, 0.16); border: 1px solid rgba(220, 38, 38, 0.5); color: #fecaca; }
+      .aviso.ok { display: block; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.5); color: #a7f3d0; }
+      .rodape { margin-top: 22px; font-size: 12px; color: var(--slate-400); line-height: 1.6; }
+      .rodape b { color: var(--slate-300); }
+    </style>
+  </head>
+  <body>
+    <div class="cartao">
+      <div class="marca">
+        <svg class="logo" viewBox="0 0 192 192" role="img" aria-label="Kairós">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b82f6" />
+              <stop offset="100%" stop-color="#1d4ed8" />
+            </linearGradient>
+          </defs>
+          <rect width="192" height="192" rx="44" fill="url(#g)" />
+          <text
+            x="96" y="112"
+            text-anchor="middle"
+            font-family="Segoe UI, Arial, sans-serif"
+            font-size="38"
+            font-weight="800"
+            fill="#ffffff"
+            letter-spacing="-1"
+          >KAIRÓS</text>
+        </svg>
+        <div>
+          <h1>Ative seu Kairós PDV <span>1.0</span></h1>
+          <p class="sub">Cole a chave de licença recebida da Kairós.</p>
+        </div>
+      </div>
+
+      <label for="chave">Chave de licença</label>
+      <input
+        id="chave"
+        type="text"
+        placeholder="KAIROS-XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button id="ativar">Ativar licença</button>
+
+      <div id="aviso" class="aviso"></div>
+
+      <div class="equip">
+        Se a Kairós te mandou uma chave presa a este computador, informe o código
+        abaixo para ela:
+        <b id="equip">—</b>
+      </div>
+
+      <div class="rodape">
+        A licença é vinculada a <b>este computador</b>: o instalador copiado para
+        outra máquina não abre.<br />
+        Dúvida na ativação? Fale com a Kairós.
+      </div>
+    </div>
+
+    <script>
+      const api = window.electronAPI;
+      const elChave = document.getElementById('chave');
+      const elBotao = document.getElementById('ativar');
+      const elAviso = document.getElementById('aviso');
+      const elEquip = document.getElementById('equip');
+
+      function mostrar(texto, tipo) {
+        elAviso.textContent = texto;
+        elAviso.className = 'aviso ' + tipo;
+      }
+
+      if (!api || !api.licenseActivate) {
+        mostrar(
+          'Esta tela de ativação só funciona no aplicativo instalado (Windows). ' +
+            'Se você abriu pelo navegador, use o link da PWA.',
+          'erro'
+        );
+        elBotao.disabled = true;
+      } else {
+        api.licenseEquipment()
+          .then((r) => {
+            if (r && r.codigo) elEquip.textContent = r.codigo;
+          })
+          .catch(() => {});
+
+        elChave.focus();
+      }
+
+      // Formata enquanto digita: KAIROS-XXXX-XXXX-...
+      elChave.addEventListener('input', () => {
+        const bruto = elChave.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        const corpo = bruto.replace(/^KAIROS/, '');
+        const grupos = corpo.match(/.{1,8}/g) || [];
+        elChave.value = (bruto.startsWith('KAIROS') ? 'KAIROS-' : '') + grupos.join('-');
+      });
+
+      async function ativar() {
+        const codigo = elChave.value.trim();
+        if (!codigo) {
+          mostrar('Cole a chave de licença.', 'erro');
+          return;
+        }
+        elBotao.disabled = true;
+        elBotao.textContent = 'Verificando...';
+        try {
+          const r = await api.licenseActivate(codigo);
+          if (r && r.ok) {
+            mostrar(r.mensagem + ' Abrindo o Kairós PDV...', 'ok');
+            elBotao.textContent = 'Ativado!';
+          } else {
+            mostrar((r && r.mensagem) || 'Não foi possível ativar.', 'erro');
+            elBotao.disabled = false;
+            elBotao.textContent = 'Ativar licença';
+          }
+        } catch (e) {
+          mostrar('Erro inesperado: ' + (e && e.message ? e.message : e), 'erro');
+          elBotao.disabled = false;
+          elBotao.textContent = 'Ativar licença';
+        }
+      }
+
+      elBotao.addEventListener('click', ativar);
+      elChave.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') ativar();
+      });
+    </script>
+  </body>
+</html>

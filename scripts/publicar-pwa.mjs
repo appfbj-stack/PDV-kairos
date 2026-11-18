@@ -19,6 +19,7 @@ import {
   existsSync,
   readdirSync,
   copyFileSync,
+  unlinkSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -69,6 +70,14 @@ function preservarAssetsAntigos() {
 }
 
 preservarAssetsAntigos();
+
+// A tela de ativacao e so do aplicativo instalado (o portao esta no
+// processo principal do Electron). Nao faz sentido publicar na web.
+const licenseHtml = join('dist', 'license.html');
+if (existsSync(licenseHtml)) {
+  unlinkSync(licenseHtml);
+  console.log('[pwa] license.html removido do build web.');
+}
 
 const tmp = mkdtempSync(join(tmpdir(), 'kairos-pdv-pages-'));
 cpSync('dist', tmp, { recursive: true });

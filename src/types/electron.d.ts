@@ -22,11 +22,27 @@ export interface ResultadoImpressao {
   error?: string;
 }
 
+export interface EstadoLicenca {
+  ativada: boolean;
+  valida: boolean;
+  cliente: string;
+  expiraEm: number;
+  expirada: boolean;
+  codigo: string;
+  codigoEquipamento: string;
+  motivo: string;
+}
+
 export interface ElectronAPI {
   isElectron: true;
   getAppVersion(): Promise<string>;
   printReceipt(options?: { silent?: boolean; printerName?: string }): Promise<ResultadoImpressao>;
   listPrinters(): Promise<ImpressoraDoSistema[]>;
+  licenseStatus(): Promise<EstadoLicenca>;
+  licenseEquipment(): Promise<{ codigo: string }>;
+  licenseActivate(
+    codigo: string
+  ): Promise<{ ok: boolean; mensagem: string; estado: EstadoLicenca }>;
   selectDirectory(): Promise<string | null>;
   createBackupFile(data: string): Promise<{ success: boolean; filePath?: string; error?: string }>;
   restoreBackupFile(): Promise<{ success: boolean; data?: string; canceled?: boolean; error?: string }>;
