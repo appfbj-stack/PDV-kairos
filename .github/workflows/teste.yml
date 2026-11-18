@@ -1,0 +1,12 @@
+name: Teste de Actions
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "actions funcionam"
