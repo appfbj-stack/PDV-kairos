@@ -4,11 +4,18 @@
  * O app e 100% offline: guardamos o "app shell" (index, css, js e icones)
  * no cache do navegador para que o Kairós PDV abra mesmo sem internet.
  *
- * Regra: cache-first para o shell, rede apenas para o que ainda nao existe
- * no cache. Os dados de vendas NAO ficam aqui — eles vivem no localStorage
- * do navegador (ver src/services/db.ts).
+ * REGRA IMPORTANTE (18/11/2026):
+ *   O HTML (navegacao) e buscado na REDE PRIMEIRO e so depois cai no cache.
+ *   Cache-first no HTML quebrava o app depois de uma atualizacao: o index
+ *   antigo continuava no cache apontando para um bundle que ja nao existia
+ *   no servidor (404) e a tela ficava em branco. Os assets tem hash no nome,
+ *   entao podem seguir cache-first com seguranca.
+ *
+ * Os dados de vendas NAO ficam aqui - eles vivem no localStorage do
+ * navegador (ver src/services/db.ts).
  */
-const CACHE = 'kairos-pdv-v1';
+
+const CACHE = 'kairos-pdv-v2';
 
 const SHELL = [
   './',
@@ -45,6 +52,28 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
+  // Navegacao (HTML): rede primeiro, cache so como reserva offline.
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((cache) => {
+              cache.put('./index.html', copy);
+              cache.put('./', copy);
+            });
+          }
+          return res;
+        })
+        .catch(() =>
+          caches.match('./index.html').then((hit) => hit || caches.match('./'))
+        )
+    );
+    return;
+  }
+
+  // Demais recursos: cache primeiro (os arquivos tem hash no nome).
   event.respondWith(
     caches.match(req).then((hit) => {
       if (hit) return hit;
@@ -56,12 +85,7 @@ self.addEventListener('fetch', (event) => {
           }
           return res;
         })
-        .catch(() =>
-          // offline e recurso novo: devolve o index (SPA)
-          req.mode === 'navigate'
-            ? caches.match('./index.html')
-            : Promise.reject(new Error('offline'))
-        );
+        .catch(() => Promise.reject(new Error('offline')));
     })
   );
 });

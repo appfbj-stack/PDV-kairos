@@ -12,7 +12,14 @@
  * .github/workflows/deploy-pages.yml.
  */
 import { execSync } from 'node:child_process';
-import { cpSync, mkdtempSync, writeFileSync, existsSync } from 'node:fs';
+import {
+  cpSync,
+  mkdtempSync,
+  writeFileSync,
+  existsSync,
+  readdirSync,
+  copyFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -22,6 +29,46 @@ if (!existsSync('dist')) {
   console.error('[pwa] a pasta dist/ nao existe. Rode "npm run build" antes.');
   process.exit(1);
 }
+
+/**
+ * Mantem os arquivos antigos do branch gh-pages no novo publish.
+ *
+ * O HTML tem hash no nome do bundle (`assets/index-XXXX.js`). Um navegador
+ * com o service worker antigo pode buscar um HTML guardado no cache que
+ * aponta para um bundle que saiu do ar -> tela em branco. Publicando os
+ * bundles antigos junto, esse HTML guardado ainda encontra o seu arquivo.
+ */
+function preservarAssetsAntigos() {
+  const antigo = mkdtempSync(join(tmpdir(), 'kairos-pdv-anterior-'));
+  try {
+    execSync(
+      `git clone --quiet --depth 1 --branch gh-pages https://github.com/${repo}.git "${antigo}"`,
+      { stdio: 'ignore' }
+    );
+  } catch {
+    console.log('[pwa] branch gh-pages ainda nao existe (primeiro publish).');
+    return;
+  }
+
+  let copiados = 0;
+  for (const pasta of ['assets', 'icons']) {
+    const origem = join(antigo, pasta);
+    if (!existsSync(origem)) continue;
+    const destino = join('dist', pasta);
+    if (!existsSync(destino)) cpSync(origem, destino, { recursive: true });
+    for (const arquivo of readdirSync(origem)) {
+      const de = join(origem, arquivo);
+      const para = join(destino, arquivo);
+      if (!existsSync(para)) {
+        copyFileSync(de, para);
+        copiados++;
+      }
+    }
+  }
+  console.log(`[pwa] ${copiados} arquivo(s) antigo(s) preservados no publish.`);
+}
+
+preservarAssetsAntigos();
 
 const tmp = mkdtempSync(join(tmpdir(), 'kairos-pdv-pages-'));
 cpSync('dist', tmp, { recursive: true });
