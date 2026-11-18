@@ -34,6 +34,7 @@ O Kairós PDV pode ser usado de **duas formas**:
 - **Link:** https://appfbj-stack.github.io/PDV-kairos/
 - Abra o link no Chrome ou Edge (computador ou celular) e use o menu do navegador para **"Instalar aplicativo"**. O Kairós PDV passa a ter ícone próprio na área de trabalho / tela inicial e abre em janela própria.
 - Funciona **offline** depois da primeira visita (o app fica em cache no aparelho).
+- ⚠️ **A PWA é uma versão de teste/demo**: ela **não** pede chave de licença (a trava de licença fica no aplicativo instalado no Windows). Para o balcão, use a versão instalada.
 - ⚠️ **Os dados da PWA ficam no `localStorage` do navegador** e são **separados** da versão instalada no Windows. Para levar os dados de uma versão para a outra, use **Backup** (arquivo `.kpdv`) e restaure no destino.
 - A PWA é a forma mais rápida de testar o sistema antes de instalar no PC do balcão.
 
@@ -50,7 +51,29 @@ O Kairós PDV pode ser usado de **duas formas**:
 
 ---
 
-## 4. Primeiro Uso e Configuração Inicial
+## 4. Ativação da Licença
+
+A versão instalada no Windows é **licenciada**: ela abre somente depois que a Kairós libera o uso.
+
+1. Ao abrir pela primeira vez, o Kairós PDV mostra a tela **"Ative seu Kairós PDV"** (o app ainda não abre).
+2. Cole a chave de licença recebida da Kairós (começa com `KAIROS-`) e clique em **Ativar licença**.
+3. Pronto: o Kairós PDV abre normalmente.
+
+**Códigos de computador (importante)**
+
+- A tela de ativação mostra o código do aparelho, no formato `EQP-XXXXXXXXXXXX`.
+- A licença fica **vinculada a esse computador**: copiar o instalador (ou a pasta inteira) para outro PC **não abre** — a tela de ativação volta a aparecer.
+- Se a Kairós te mandar uma chave já presa a um aparelho específico, informe o `EQP-…` que aparece na sua tela para ela gerar a chave certa.
+- Cada licença vale em **um computador só**. Se você precisar trocar de máquina, fale com a Kairós para liberar a sua.
+
+**Sem internet na hora da ativação**
+
+- O PDV foi feito para funcionar **offline**. Se o computador estiver sem internet no momento da ativação, a chave é aceita localmente e o app abre normalmente.
+- A Kairós registra a ativação na **Central Kairós** assim que o app voltar a ter internet (na próxima abertura do programa). É por lá que a licença pode ser suspensa, se necessário.
+
+---
+
+## 5. Primeiro Uso e Configuração Inicial
 
 1. Ao abrir pela primeira vez, o Kairós PDV prepara o armazenamento local e já carrega produtos essenciais de demonstração.
 2. Acesse a aba **Configurações**:
