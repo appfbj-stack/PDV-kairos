@@ -5,6 +5,11 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // 'base' relativo: no Electron a pagina e carregada por file://
+    // (file:///.../app.asar/dist/index.html). Com o default '/', o
+    // <script src="/assets/..."> resolveria para file:///assets/... e a tela
+    // ficaria em branco no app instalado.
+    base: './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
