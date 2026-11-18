@@ -4,7 +4,7 @@
  * Kairós PDV - Configurações Gerais do Estabelecimento, Ramo de Atividade e Impressão
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Settings as SettingsIcon,
   Store,
@@ -23,6 +23,8 @@ import { Settings, PrinterWidth, BusinessSegment } from '../types/pdv';
 import { db } from '../services/db';
 import { sound } from '../services/sound';
 import { SEGMENT_LABELS } from '../services/segmentPresets';
+import { imprimirComprovante, listarImpressoras, rodandoNoElectron } from '../services/print';
+import type { ImpressoraDoSistema } from '../types/electron';
 
 interface SettingsScreenProps {
   settings: Settings;
@@ -41,6 +43,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [phone, setPhone] = useState(settings.phone);
   const [receiptFooter, setReceiptFooter] = useState(settings.receipt_footer);
   const [printerWidth, setPrinterWidth] = useState<PrinterWidth>(settings.printer_width);
+  const [printerName, setPrinterName] = useState(settings.printer_name || '');
+  const [printers, setPrinters] = useState<ImpressoraDoSistema[]>([]);
   const [autoPrint, setAutoPrint] = useState(settings.auto_print);
   const [beepSound, setBeepSound] = useState(settings.beep_sound);
   const [allowNegativeStock, setAllowNegativeStock] = useState(settings.allow_negative_stock);
@@ -57,6 +61,18 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [presetNotice, setPresetNotice] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const [loadingPreset, setLoadingPreset] = useState(false);
 
+  // Lista as impressoras instaladas (somente no app instalado).
+  useEffect(() => {
+    let ativo = true;
+    if (!rodandoNoElectron()) return;
+    listarImpressoras().then((lista) => {
+      if (ativo) setPrinters(lista);
+    });
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
   const handleSave = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const updated: Settings = {
@@ -67,6 +83,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       phone: phone.trim(),
       receipt_footer: receiptFooter.trim(),
       printer_width: printerWidth,
+      printer_name: printerName,
       auto_print: autoPrint,
       beep_sound: beepSound,
       allow_negative_stock: allowNegativeStock,
@@ -83,8 +100,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     setTimeout(() => setSavedSuccess(false), 2500);
   };
 
-  const handleTestPrint = () => {
-    window.print();
+  const handleTestPrint = async () => {
+    await imprimirComprovante({ printerName, silent: true });
   };
 
   const handleTestBeep = () => {
@@ -417,6 +434,36 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </select>
             </div>
 
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">
+                Impressora Usada nos Comprovantes
+              </label>
+              <select
+                value={printerName}
+                onChange={(e) => setPrinterName(e.target.value)}
+                disabled={!rodandoNoElectron()}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-900 font-semibold cursor-pointer disabled:opacity-60"
+              >
+                <option value="">Impressora padrão do Windows</option>
+                {printers.map((p) => (
+                  <option key={p.name} value={p.name}>
+                    {p.displayName}
+                    {p.isDefault ? ' (padrão)' : ''}
+                  </option>
+                ))}
+              </select>
+              {!rodandoNoElectron() ? (
+                <p className="text-[11px] text-slate-500 mt-1">
+                  A escolha de impressora fica disponível só no aplicativo instalado (Windows).
+                </p>
+              ) : printers.length === 0 ? (
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Nenhuma impressora detectada. Confira se a impressora térmica está ligada e
+                  instalada no Windows.
+                </p>
+              ) : null}
+            </div>
+
             <div className="flex items-center gap-2 pt-5">
               <input
                 type="checkbox"
@@ -429,6 +476,30 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 Imprimir comprovante automaticamente ao confirmar a venda
               </label>
             </div>
+          </div>
+
+          {/* Amostra usada no "Testar Impressão" — precisa do id thermal-print-area
+              para que a folha @media print do index.css não saia em branco. */}
+          <div
+            id="thermal-print-area"
+            className="receipt-paper p-4 border border-slate-300 rounded-sm text-slate-900 text-xs font-mono leading-tight"
+          >
+            <div className="text-center font-bold pb-2 border-b border-dashed border-slate-400">
+              <div>{(storeName.trim() || 'SUA LOJA').toUpperCase()}</div>
+              {cnpj.trim() && <div className="text-[10px]">CNPJ: {cnpj.trim()}</div>}
+              {address.trim() && <div className="text-[10px]">{address.trim()}</div>}
+              {phone.trim() && <div className="text-[10px]">Tel: {phone.trim()}</div>}
+            </div>
+            <div className="text-center py-1 text-[10px]">COMPROVANTE DE TESTE</div>
+            <div className="flex justify-between pt-1">
+              <span>ITEM DE TESTE</span>
+              <span>1 UN</span>
+            </div>
+            <div className="flex justify-between font-bold border-t border-dashed border-slate-300 pt-1">
+              <span>TOTAL</span>
+              <span>R$ 0,00</span>
+            </div>
+            <div className="text-center pt-2 text-[10px]">{receiptFooter.trim()}</div>
           </div>
         </div>
 

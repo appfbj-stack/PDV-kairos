@@ -9,6 +9,7 @@ import React from 'react';
 import { Printer, X, Download } from 'lucide-react';
 import { Sale, SaleItem, Settings } from '../types/pdv';
 import { formatMoney, formatDateTime, getPaymentMethodLabel } from '../services/formatters';
+import { imprimirComprovante } from '../services/print';
 
 interface ThermalReceiptProps {
   sale: Sale;
@@ -29,7 +30,7 @@ export const ThermalReceipt: React.FC<ThermalReceiptProps> = ({
   const widthClass = is58mm ? 'max-w-[280px] text-[11px]' : 'max-w-[340px] text-xs';
 
   const handlePrint = () => {
-    window.print();
+    void imprimirComprovante({ printerName: settings.printer_name || '', silent: true });
   };
 
   const handleDownloadTxt = () => {

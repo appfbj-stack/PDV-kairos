@@ -26,6 +26,7 @@ export default function App() {
     phone: '(11) 98765-4321',
     receipt_footer: 'Obrigado pela preferência! Volte sempre.',
     printer_width: '80mm',
+    printer_name: '',
     auto_print: true,
     backup_dir: 'C:\\KairosPDV\\Backups',
     allow_negative_stock: false,

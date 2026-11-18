@@ -117,6 +117,8 @@ export interface Settings {
   phone: string;
   receipt_footer: string;
   printer_width: PrinterWidth;
+  /** Impressora térmica alvo. Vazio = impressora padrão do Windows. */
+  printer_name?: string;
   auto_print: boolean;
   backup_dir: string;
   last_backup_at?: string;

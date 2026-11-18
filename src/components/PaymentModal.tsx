@@ -21,6 +21,7 @@ import { formatMoney, parseMoneyToCents } from '../services/formatters';
 import { db } from '../services/db';
 import { sound } from '../services/sound';
 import { ThermalReceipt } from './ThermalReceipt';
+import { imprimirComprovante } from '../services/print';
 
 interface PaymentModalProps {
   items: CartItem[];
@@ -100,9 +101,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       setCompletedSale(result);
 
       if (settings.auto_print) {
-        // Dispara impressão automática conforme configuração do lojista
+        // Dispara impressão automática conforme configuração do lojista.
+        // No app instalado sai direto na impressora térmica, sem caixa de diálogo.
         setTimeout(() => {
-          window.print();
+          void imprimirComprovante({
+            printerName: settings.printer_name || '',
+            silent: true,
+          });
         }, 300);
       }
     } catch (err: unknown) {
@@ -171,7 +176,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3 mt-5">
             <button
-              onClick={() => window.print()}
+              onClick={() =>
+                void imprimirComprovante({ printerName: settings.printer_name || '', silent: true })
+              }
               className="flex items-center justify-center gap-2 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors cursor-pointer text-sm shadow"
             >
               <Printer className="w-4 h-4" />

@@ -24,6 +24,7 @@ import {
 import { CashSession, CashOperation, Settings } from '../types/pdv';
 import { db } from '../services/db';
 import { formatMoney, formatDateTime, parseMoneyToCents } from '../services/formatters';
+import { imprimirComprovante } from '../services/print';
 
 interface CashScreenProps {
   settings: Settings;
@@ -702,7 +703,10 @@ export const CashScreen: React.FC<CashScreenProps> = ({ settings, onSessionStatu
               Comprovante de fechamento pronto para impressão térmica ou arquivamento.
             </p>
 
-            <div className="receipt-paper p-4 border border-slate-300 rounded text-left text-xs font-mono space-y-1.5 mb-4">
+            <div
+              id="thermal-print-area"
+              className="receipt-paper p-4 border border-slate-300 rounded text-left text-xs font-mono space-y-1.5 mb-4"
+            >
               <div className="text-center font-bold pb-2 border-b border-dashed border-slate-400">
                 <div>FECHAMENTO DE CAIXA</div>
                 <div className="text-[10px] text-slate-500">{settings.store_name}</div>
@@ -760,7 +764,9 @@ export const CashScreen: React.FC<CashScreenProps> = ({ settings, onSessionStatu
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => window.print()}
+                onClick={() =>
+                  void imprimirComprovante({ printerName: settings.printer_name || '', silent: true })
+                }
                 className="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <Printer className="w-3.5 h-3.5" />

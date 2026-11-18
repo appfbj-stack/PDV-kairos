@@ -13,7 +13,8 @@
     "build:electron": "node scripts/build-electron.mjs",
     "preview": "vite preview",
     "clean": "node scripts/clean.mjs",
-    "lint": "tsc --noEmit",
+    "lint": "tsc --noEmit && npm run lint:electron",
+    "lint:electron": "tsc --ignoreConfig --noEmit --target ES2022 --module preserve --moduleResolution bundler --esModuleInterop --skipLibCheck --types node electron/main.ts electron/preload.ts",
     "electron:dev": "npm run build:electron && electron .",
     "dist:win": "npm run build && npm run build:electron && electron-builder --win --x64",
     "publicar:pwa": "node scripts/publicar-pwa.mjs"

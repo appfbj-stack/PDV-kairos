@@ -12,6 +12,15 @@ import { LocalSQLiteManager } from './database';
 let mainWindow: BrowserWindow | null = null;
 const dbManager = new LocalSQLiteManager();
 
+/** Formato que o Electron devolve em getPrintersAsync(). */
+interface ImpressoraInfo {
+  name: string;
+  displayName?: string;
+  description?: string;
+  isDefault?: boolean;
+  status?: number;
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1366,
@@ -81,22 +90,50 @@ ipcMain.handle('print:receipt', async (_event, options) => {
   if (!mainWindow) return { success: false, error: 'Janela não disponível' };
 
   return new Promise((resolve) => {
-    mainWindow?.webContents.print(
-      {
-        silent: options?.silent || false,
-        printBackground: true,
-        deviceName: options?.printerName || '',
-        margins: { marginType: 'none' },
-      },
-      (success, failureReason) => {
-        if (!success) {
-          resolve({ success: false, error: failureReason });
-        } else {
-          resolve({ success: true });
-        }
+    // deviceName vazio = usa a impressora padrão do Windows.
+    // Só enviamos o campo quando há impressora definida, para o Electron
+    // não recusar a impressão.
+    const opcoes: Record<string, unknown> = {
+      silent: options?.silent || false,
+      printBackground: true,
+      margins: { marginType: 'none' },
+    };
+    if (options?.printerName) {
+      opcoes.deviceName = options.printerName;
+    }
+
+    mainWindow?.webContents.print(opcoes, (success, failureReason) => {
+      if (!success) {
+        resolve({ success: false, error: failureReason });
+      } else {
+        resolve({ success: true });
       }
-    );
+    });
   });
+});
+
+// IPC: Lista as impressoras instaladas no Windows (para escolher a térmica)
+ipcMain.handle('print:printers', async () => {
+  if (!mainWindow) return [];
+  try {
+    const wc = mainWindow.webContents as unknown as {
+      getPrintersAsync?: () => Promise<ImpressoraInfo[]>;
+      getPrinters?: () => Promise<ImpressoraInfo[]>;
+    };
+    // Electron >= 21 expoe getPrintersAsync(); versoes antigas, getPrinters().
+    const listar = wc.getPrintersAsync ?? wc.getPrinters;
+    if (!listar) return [];
+    const impressoras = await listar.call(wc);
+    return impressoras.map((p) => ({
+      name: p.name,
+      displayName: p.displayName || p.name,
+      isDefault: Boolean(p.isDefault),
+      status: Number(p.status ?? 0),
+    }));
+  } catch (err) {
+    console.error('[print:printers] falha ao listar impressoras:', err);
+    return [];
+  }
 });
 
 // IPC: Salvar arquivo de backup no disco do Windows

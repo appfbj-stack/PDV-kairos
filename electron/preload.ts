@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAppVersion: () => ipcRenderer.invoke('app:version'),
   printReceipt: (options?: { silent?: boolean; printerName?: string }) =>
     ipcRenderer.invoke('print:receipt', options),
+  listPrinters: () => ipcRenderer.invoke('print:printers'),
   selectDirectory: () => ipcRenderer.invoke('dialog:selectDirectory'),
   createBackupFile: (data: string) => ipcRenderer.invoke('backup:create', data),
   restoreBackupFile: () => ipcRenderer.invoke('backup:restore'),
